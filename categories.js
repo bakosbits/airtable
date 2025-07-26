@@ -38,6 +38,7 @@ export async function getAllCategories() {
         const mappedCategories = filteredCategories.map((record) => ({
             id: record.id,
             Name: record.fields["Name"],
+            Slug: record.fields["Slug"] ?? null,
             Description: record.fields["Description"] ?? null,
             Count: record.fields["Count"] ?? 0,
         }));
