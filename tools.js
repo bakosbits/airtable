@@ -15,7 +15,7 @@ export async function getFeaturedTools(count = 4) {
         const featuredToolsRecords = await toolsTable
             .select({
                 filterByFormula: `AND({Active} = TRUE(), {Featured} = TRUE())`,
-                fields: ["Name", "Slug", "Domain", "Why"],
+                fields: ["Name", "Slug", "Logo","Domain", "Why"],
             })
             .all();
 
@@ -29,6 +29,7 @@ export async function getFeaturedTools(count = 4) {
         const mappedTools = selectedTools.map((record) => ({
             Name: record.fields["Name"],
             Slug: record.fields["Slug"] || null,
+            Logo: record.fields["Logo"] || null,
             Domain: record.fields["Domain"] || null,
             Why: record.fields["Why"] || null,
         }));
@@ -198,7 +199,9 @@ export async function getToolBySlug(Slug) {
                 fields: [
                     "Name",
                     "Slug",
+                    "Logo",
                     "Domain",
+                    "Website",
                     "Description",
                     "Why",
                     "Details",
