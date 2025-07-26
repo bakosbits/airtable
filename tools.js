@@ -273,3 +273,87 @@ export async function getToolBySlug(Slug) {
         throw error;
     }
 }
+
+// --- Admin CRUD functions ---
+
+const mapAdminToolRecord = (record) => ({
+    id: record.id,
+    Name: record.get("Name") || "",
+    Domain: record.get("Domain") || "",
+    Website: record.get("Website") || "",    
+    Description: record.get("Description") || "",
+    Why: record.get("Why") || "",
+    Details: record.get("Details") || "",
+    Features: record.get("Features") || "",
+    Cautions: record.get("Cautions") || "",
+    Tags: record.get("Tags") || "",
+    Buyer: record.get("Buyer") || "",
+    Pricing: record.get("Pricing") || "",
+    Base_Model: record.get("Base_Model") || "",
+    Categories: record.get("Categories") || [], // Array of Category record IDs
+    Active: record.get("Active") || false,
+    Featured: record.get("Featured") || false,
+    Articles: record.get("Articles") || [], // Array of Article record IDs
+});
+
+export async function getAllToolsForAdmin() {
+    try {
+        const records = await toolsTable
+            .select({
+                sort: [{ field: "Name", direction: "asc" }],
+            })
+            .all();
+        return records.map(mapAdminToolRecord);
+    } catch (error) {
+        console.error("[getAllToolsForAdmin] ERROR fetching all tools for admin:", error);
+        throw error;
+    }
+}
+
+export async function getToolById(recordId) {
+    try {
+        const record = await toolsTable.find(recordId);
+        return mapAdminToolRecord(record);
+    } catch (error) {
+        if (error.statusCode === 404) {
+            console.warn(`[getToolById] Tool with ID "${recordId}" not found.`);
+            return null;
+        }
+        console.error(`[getToolById] ERROR fetching tool by ID "${recordId}":`, error);
+        throw error;
+    }
+}
+
+export async function createTool(toolData) {
+    try {
+        const createdRecords = await toolsTable.create([
+            { fields: toolData },
+        ], { typecast: true });
+        return mapAdminToolRecord(createdRecords[0]);
+    } catch (error) {
+        console.error("[createTool] ERROR creating tool:", error);
+        throw error;
+    }
+}
+
+export async function updateTool(recordId, toolData) {
+    try {
+        const updatedRecords = await toolsTable.update([
+            { id: recordId, fields: toolData },
+        ], { typecast: true });
+        return mapAdminToolRecord(updatedRecords[0]);
+    } catch (error) {
+        console.error(`[updateTool] ERROR updating tool ID "${recordId}":`, error);
+        throw error;
+    }
+}
+
+export async function deleteTool(recordId) {
+    try {
+        const deletedRecords = await toolsTable.destroy([recordId]);
+        return deletedRecords[0];
+    } catch (error) {
+        console.error(`[deleteTool] ERROR deleting tool ID "${recordId}":`, error);
+        throw error;
+    }
+}
