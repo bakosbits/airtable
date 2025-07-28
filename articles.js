@@ -28,6 +28,7 @@ export async function getAllArticles() {
                 filterByFormula: "{Published} = TRUE()",
                 sort: [{ field: "Date", direction: "desc" }],
             })
+            .map(mapPublicArticleRecord)
             .all();
 
         const mappedArticles = records.map(mapPublicArticleRecord);
