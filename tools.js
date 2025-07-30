@@ -233,7 +233,6 @@ export async function getToolBySlug(Slug) {
             .filter(Boolean);
 
 
-        // Fetch linked article details if present
         let articleSlug = null;
         let articleTitle = null;
         const linkedArticleIds = toolFields.Articles;
@@ -241,9 +240,7 @@ export async function getToolBySlug(Slug) {
         if (linkedArticleIds && linkedArticleIds.length > 0) {
             // Assuming one article per tool
             const linkedArticleId = linkedArticleIds[0];
-            console.log(
-                `[getToolBySlug] Tool "${toolFields.Name}" linked to article ID: ${linkedArticleId}. Fetching article details.`,
-            );
+
             const articleResult = await articlesTable
                 .select({
                     filterByFormula: `RECORD_ID() = '${linkedArticleId}'`,
