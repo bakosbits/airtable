@@ -8,7 +8,7 @@ const mapPublicArticleRecord = (record) => ({
     Content: record.get("Content") || "",
     Date: record.get("Date") || "",
     Slug: record.get("Slug") || null,
-    Author: record.get("Author") || "The Team",
+    Author: record.get("Author") || "",
 });
 
 // Helper to map Airtable record to a clean Article object for admin pages
@@ -28,12 +28,9 @@ export async function getAllArticles() {
                 filterByFormula: "{Published} = TRUE()",
                 sort: [{ field: "Date", direction: "desc" }],
             })
-            .map(mapPublicArticleRecord)
             .all();
 
-        const mappedArticles = records.map(mapPublicArticleRecord);
-
-        return mappedArticles;
+        return records.map(mapPublicArticleRecord);
     } catch (error) {
         console.error(
             "[getAllArticles] ERROR fetching all articles:",
